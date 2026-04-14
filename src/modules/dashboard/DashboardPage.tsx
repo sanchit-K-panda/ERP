@@ -1,0 +1,143 @@
+"use client";
+
+import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "@/hooks/useAuth";
+import { useContextStore } from "@/store/contextStore";
+import { dashboardService } from "@/services/dashboardService";
+import { KpiRow } from "@/modules/dashboard/components/KpiRow";
+import { RecentJobsTable } from "@/modules/dashboard/components/RecentJobsTable";
+import { TransactionsList } from "@/modules/dashboard/components/TransactionsList";
+import { ShipmentsList } from "@/modules/dashboard/components/ShipmentsList";
+import { QuickInsightsPanel } from "@/modules/dashboard/components/QuickInsightsPanel";
+import { RevenueExpenseChart } from "@/modules/dashboard/charts/RevenueExpenseChart";
+import { JobCompletionChart } from "@/modules/dashboard/charts/JobCompletionChart";
+import { CashFlowChart } from "@/modules/dashboard/charts/CashFlowChart";
+
+export function DashboardPage() {
+  const { user, role } = useAuth();
+  const activeCompany = useContextStore((state) => state.activeCompany);
+  const activeHub = useContextStore((state) => state.activeHub);
+
+  const kpiQuery = useQuery({
+    queryKey: ["dashboard", "kpis", activeCompany?.id, activeHub?.id],
+    queryFn: dashboardService.getKpis,
+    staleTime: 30_000,
+  });
+
+  const jobsQuery = useQuery({
+    queryKey: ["dashboard", "jobs", activeCompany?.id, activeHub?.id],
+    queryFn: dashboardService.getRecentJobs,
+    staleTime: 30_000,
+  });
+
+  const transactionsQuery = useQuery({
+    queryKey: ["dashboard", "transactions", activeCompany?.id, activeHub?.id],
+    queryFn: dashboardService.getTransactions,
+    staleTime: 30_000,
+  });
+
+  const shipmentsQuery = useQuery({
+    queryKey: ["dashboard", "shipments", activeCompany?.id, activeHub?.id],
+    queryFn: dashboardService.getShipments,
+    staleTime: 30_000,
+  });
+
+  const insightsQuery = useQuery({
+    queryKey: ["dashboard", "insights", activeCompany?.id, activeHub?.id],
+    queryFn: dashboardService.getInsights,
+    staleTime: 30_000,
+  });
+
+  const performanceQuery = useQuery({
+    queryKey: ["dashboard", "performance", activeCompany?.id, activeHub?.id],
+    queryFn: dashboardService.getPerformanceData,
+    staleTime: 30_000,
+  });
+
+  const contextSummary = useMemo(
+    () =>
+      `${activeCompany?.name ?? "No company"} • ${activeHub?.name ?? "No hub"}`,
+    [activeCompany?.name, activeHub?.name],
+  );
+
+  return (
+    <section className="space-y-6">
+      <header className="space-y-1">
+        <h1 className="page-title">Welcome {user?.name}</h1>
+        <p className="text-sm text-muted-foreground">
+          {role} • {contextSummary}
+        </p>
+      </header>
+
+      <KpiRow
+        data={kpiQuery.data ?? []}
+        errorMessage={kpiQuery.isError ? "Unable to load KPI metrics." : null}
+        isLoading={kpiQuery.isLoading}
+      />
+
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,7fr)_minmax(0,3fr)]">
+        <div className="space-y-4">
+          <RecentJobsTable
+            data={jobsQuery.data ?? []}
+            errorMessage={jobsQuery.isError ? "Unable to load recent jobs." : null}
+            isLoading={jobsQuery.isLoading}
+          />
+
+          <TransactionsList
+            data={transactionsQuery.data ?? []}
+            errorMessage={
+              transactionsQuery.isError ? "Unable to load recent transactions." : null
+            }
+            isLoading={transactionsQuery.isLoading}
+          />
+
+          <ShipmentsList
+            data={shipmentsQuery.data ?? []}
+            errorMessage={shipmentsQuery.isError ? "Unable to load shipments." : null}
+            isLoading={shipmentsQuery.isLoading}
+          />
+        </div>
+
+        <QuickInsightsPanel
+          data={insightsQuery.data ?? []}
+          errorMessage={insightsQuery.isError ? "Unable to load insights." : null}
+          isLoading={insightsQuery.isLoading}
+        />
+      </div>
+
+      <section className="space-y-3">
+        <div>
+          <h2 className="text-lg font-semibold">Performance Overview</h2>
+          <p className="text-sm text-muted-foreground">Revenue, completion, and cash flow</p>
+        </div>
+
+        <div className="grid gap-4 xl:grid-cols-3">
+          <RevenueExpenseChart
+            data={performanceQuery.data?.revenueExpense ?? []}
+            errorMessage={
+              performanceQuery.isError ? "Unable to load revenue and expense chart." : null
+            }
+            isLoading={performanceQuery.isLoading}
+          />
+
+          <JobCompletionChart
+            errorMessage={
+              performanceQuery.isError ? "Unable to load completion chart." : null
+            }
+            isLoading={performanceQuery.isLoading}
+            rate={performanceQuery.data?.jobCompletionRate ?? 0}
+          />
+
+          <CashFlowChart
+            data={performanceQuery.data?.cashFlow ?? []}
+            errorMessage={
+              performanceQuery.isError ? "Unable to load cash flow chart." : null
+            }
+            isLoading={performanceQuery.isLoading}
+          />
+        </div>
+      </section>
+    </section>
+  );
+}
