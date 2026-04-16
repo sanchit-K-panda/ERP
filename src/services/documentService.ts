@@ -27,7 +27,7 @@ const INITIAL_DOCUMENTS: DocumentRecord[] = [
     uploadedAt: daysAgo(2),
     status: "Uploaded",
     tags: ["client", "invoice"],
-    previewText: "Commercial invoice for Reliance Retail Limited shipment batch 01.",
+    previewText: "Commercial invoice for Bangladesh Shipping Corporation (BSC) shipment batch 01.",
   },
   {
     id: "document-2",
@@ -42,7 +42,7 @@ const INITIAL_DOCUMENTS: DocumentRecord[] = [
     uploadedAt: daysAgo(3),
     status: "Uploaded",
     tags: ["bl", "sea"],
-    previewText: "Original bill of lading associated with Tata Steel shipment.",
+    previewText: "Original bill of lading associated with Bangladesh Shipping Agencies shipment.",
   },
   {
     id: "document-3",

@@ -21,6 +21,7 @@ export function DashboardPage() {
   const activeCompany = useContextStore((state) => state.activeCompany);
   const activeHub = useContextStore((state) => state.activeHub);
   const roleFallbackCompany = getRoleCompanyContext(role);
+  const fallbackCompanyName = roleFallbackCompany.name;
   const activeRole = role ?? "BUSINESS_OWNER";
   const showTransactions = activeRole !== "SALES_PERSON";
   const showInsights = activeRole !== "SALES_PERSON";
@@ -91,8 +92,8 @@ export function DashboardPage() {
 
   const contextSummary = useMemo(
     () =>
-      `${activeCompany?.name ?? roleFallbackCompany.name} • ${activeHub?.name ?? "Chittagong Sea Port"}`,
-    [activeCompany?.name, activeHub?.name],
+      `${activeCompany?.name ?? fallbackCompanyName} • ${activeHub?.name ?? "Chittagong Sea Port"}`,
+    [activeCompany?.name, activeHub?.name, fallbackCompanyName],
   );
 
   return (
