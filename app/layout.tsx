@@ -14,7 +14,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "NEO CRM",
+  title: "Simon Logistics",
   description: "Enterprise logistics operations workspace",
 };
 

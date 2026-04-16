@@ -13,6 +13,7 @@ function formatCurrency(value: number, currency: CurrencyCode) {
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency,
+    currencyDisplay: "narrowSymbol",
     maximumFractionDigits: 0,
   }).format(value);
 }

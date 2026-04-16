@@ -14,22 +14,22 @@ type LoginResult = {
 
 const DEMO_ACCOUNTS: DemoAccount[] = [
   {
-    email: "owner@neo.com",
+    email: "owner@simontrade.com",
     password: "123456",
     role: "BUSINESS_OWNER",
-    user: { id: "u-owner", email: "owner@neo.com", name: "Owner User" },
+    user: { id: "u-owner", email: "owner@simontrade.com", name: "Owner User" },
   },
   {
-    email: "manager@neo.com",
+    email: "manager@simontrade.com",
     password: "123456",
     role: "BUSINESS_MANAGER",
-    user: { id: "u-manager", email: "manager@neo.com", name: "Manager User" },
+    user: { id: "u-manager", email: "manager@simontrade.com", name: "Manager User" },
   },
   {
-    email: "sales@neo.com",
+    email: "sales@simontrade.com",
     password: "123456",
     role: "SALES_PERSON",
-    user: { id: "u-sales", email: "sales@neo.com", name: "Sales User" },
+    user: { id: "u-sales", email: "sales@simontrade.com", name: "Sales User" },
   },
 ];
 

@@ -36,7 +36,8 @@ function formatMetricValue(value: number, format: ReportValueFormat) {
   if (format === "currency") {
     return new Intl.NumberFormat("en-IN", {
       style: "currency",
-      currency: "INR",
+      currency: "BDT",
+      currencyDisplay: "narrowSymbol",
       maximumFractionDigits: 0,
     }).format(value);
   }
@@ -102,7 +103,12 @@ export function ReportsCharts({
                 tick={{ fill: "rgb(var(--chart-tick))", fontSize: 12 }}
                 tickFormatter={(value: number) => {
                   if (schema.primaryFormat === "currency") {
-                    return `₹${Math.round(value / 100000)}L`;
+                    return new Intl.NumberFormat("en-IN", {
+                      style: "currency",
+                      currency: "BDT",
+                      currencyDisplay: "narrowSymbol",
+                      maximumFractionDigits: 0,
+                    }).format(value);
                   }
 
                   return `${Math.round(value)}`;

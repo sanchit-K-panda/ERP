@@ -22,13 +22,11 @@ import type { PartySearchResult } from "@/modules/parties/types";
 
 const HUB_OPTIONS = [
   "Mumbai Port Hub",
-  "Delhi ICD Hub",
-  "Chennai Port Hub",
-  "Mundra Port Hub",
-  "Bangalore Air Cargo Hub",
-  "Dubai Free Zone Hub",
-  "Singapore Gateway Hub",
-  "Rotterdam Port Hub",
+  "Dhaka Air Cargo",
+  "Chittagong Sea Port",
+  "Dubai Sea Port",
+  "Karachi Port",
+  "Singapore Sea Port",
 ];
 
 const createJobSchema = z
@@ -48,7 +46,7 @@ const createJobSchema = z
     supplierName: z.string().optional(),
     purchaseAmount: z.string().optional(),
     estimatedCost: z.string().optional(),
-    currency: z.enum(["INR"]),
+    currency: z.enum(["BDT"]),
     notes: z.string().optional(),
     documents: z.array(
       z.object({
@@ -166,7 +164,7 @@ export function CreateJobPage() {
       supplierName: "",
       purchaseAmount: "",
       estimatedCost: "",
-      currency: "INR",
+      currency: "BDT",
       notes: "",
       documents: [],
     },

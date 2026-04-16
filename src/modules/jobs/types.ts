@@ -10,7 +10,7 @@ export type ServiceType = "Shipping Only" | "Purchase + Shipping" | "Full Servic
 
 export type CargoUnit = "kg" | "ton" | "pcs";
 
-export type CurrencyCode = "INR";
+export type CurrencyCode = "BDT";
 
 export type JobExpense = {
   id: string;

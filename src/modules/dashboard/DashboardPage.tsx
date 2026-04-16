@@ -57,7 +57,7 @@ export function DashboardPage() {
 
   const contextSummary = useMemo(
     () =>
-      `${activeCompany?.name ?? "No company"} • ${activeHub?.name ?? "No hub"}`,
+      `${activeCompany?.name ?? "Alpha Exim"} • ${activeHub?.name ?? "Chittagong Sea Port"}`,
     [activeCompany?.name, activeHub?.name],
   );
 
@@ -66,7 +66,7 @@ export function DashboardPage() {
       <header className="space-y-1">
         <h1 className="page-title">Welcome {user?.name}</h1>
         <p className="text-sm text-muted-foreground">
-          {role} • {contextSummary}
+          {role ?? "BUSINESS_OWNER"} • {contextSummary}
         </p>
       </header>
 

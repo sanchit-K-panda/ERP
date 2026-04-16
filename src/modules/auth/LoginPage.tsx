@@ -20,9 +20,9 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 const QUICK_LOGIN = [
-  { label: "Owner", email: "owner@neo.com", password: "123456" },
-  { label: "Manager", email: "manager@neo.com", password: "123456" },
-  { label: "Sales", email: "sales@neo.com", password: "123456" },
+  { label: "Owner", email: "owner@simontrade.com", password: "123456" },
+  { label: "Manager", email: "manager@simontrade.com", password: "123456" },
+  { label: "Sales", email: "sales@simontrade.com", password: "123456" },
 ] as const;
 
 export function LoginPage() {
@@ -30,6 +30,8 @@ export function LoginPage() {
   const { login, isAuthenticated } = useAuth();
   const activeCompany = useContextStore((state) => state.activeCompany);
   const activeHub = useContextStore((state) => state.activeHub);
+  const setActiveCompany = useContextStore((state) => state.setActiveCompany);
+  const setActiveHub = useContextStore((state) => state.setActiveHub);
 
   const {
     register,
@@ -50,7 +52,9 @@ export function LoginPage() {
       await login(values.email, values.password);
     },
     onSuccess: () => {
-      router.replace("/select-company");
+      setActiveCompany({ id: "c2", name: "Alpha Exim" });
+      setActiveHub({ id: "h3", name: "Chittagong Sea Port" });
+      router.replace("/dashboard");
     },
     onError: (error) => {
       const message = error instanceof Error ? error.message : "Unable to sign in.";
@@ -111,7 +115,7 @@ export function LoginPage() {
       >
         <div className="mb-6 space-y-1">
           <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-            NEO CRM Access
+            Simon Logistics Access
           </p>
           <h1 className="text-2xl font-semibold tracking-tight">Sign in to continue</h1>
           <p className="text-sm text-muted-foreground">
@@ -130,7 +134,7 @@ export function LoginPage() {
                 autoComplete="email"
                 className="pl-9"
                 id="email"
-                placeholder="name@neo.com"
+                placeholder="name@simontrade.com"
                 type="email"
                 {...register("email")}
               />

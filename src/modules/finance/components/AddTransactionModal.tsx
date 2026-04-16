@@ -22,7 +22,7 @@ import { TRANSACTION_CATEGORIES } from "@/modules/finance/types";
 const createTransactionSchema = z.object({
   type: z.enum(["Income", "Expense"]),
   amount: z.number().positive("Amount must be greater than zero."),
-  currency: z.enum(["INR"]),
+  currency: z.enum(["BDT"]),
   category: z.string().min(2, "Category is required."),
   partyId: z.string().optional(),
   partyName: z.string().min(2, "Party is required."),
@@ -92,7 +92,7 @@ export function AddTransactionModal({
     defaultValues: {
       type: forceType ?? "Income",
       amount: "",
-      currency: "INR",
+      currency: "BDT",
       category: "",
       partyId: "",
       partyName: "",
@@ -150,7 +150,7 @@ export function AddTransactionModal({
     reset({
       type: forceType ?? "Income",
       amount: "",
-      currency: "INR",
+      currency: "BDT",
       category: "",
       partyId: "",
       partyName: "",
@@ -304,7 +304,7 @@ export function AddTransactionModal({
                     id="transaction-currency"
                     {...register("currency")}
                   >
-                    <option value="INR">INR</option>
+                    <option value="BDT">BDT</option>
                   </select>
                 </div>
 

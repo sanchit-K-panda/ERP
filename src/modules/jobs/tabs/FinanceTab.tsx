@@ -18,7 +18,8 @@ type FinanceTabProps = {
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
-    currency: "INR",
+    currency: "BDT",
+    currencyDisplay: "narrowSymbol",
     maximumFractionDigits: 0,
   }).format(value);
 }

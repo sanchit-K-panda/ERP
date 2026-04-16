@@ -96,11 +96,11 @@ const SidebarHeader = memo(function SidebarHeader({
           collapsed ? "pointer-events-none -translate-x-2 opacity-0" : "translate-x-0 opacity-100",
         )}
       >
-        NEO CRM
+        Simon Logistics
       </p>
 
       {collapsed ? (
-        <p className="absolute left-3 text-xs font-semibold tracking-widest">NEO</p>
+        <p className="absolute left-3 text-xs font-semibold tracking-widest">SL</p>
       ) : null}
 
       <button

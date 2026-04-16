@@ -317,7 +317,7 @@ export function AddShipmentModal({
                   </label>
                   <Input
                     id="destination-route"
-                    placeholder="Dubai Free Zone Hub"
+                    placeholder="Dubai Sea Port"
                     {...register("destinationHub")}
                   />
                   {errors.destinationHub?.message ? (

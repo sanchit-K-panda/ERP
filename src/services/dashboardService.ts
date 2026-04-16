@@ -100,13 +100,13 @@ const RECENT_JOBS: RecentJob[] = [
   },
   {
     jobId: "J-20260408-09",
-    client: "Bharat Coastal Movers",
+    client: "Reliance Retail Limited",
     status: "In Transit",
     date: "2026-04-08",
   },
   {
     jobId: "J-20260407-06",
-    client: "IndiTrans Supply Chain",
+    client: "Adani Ports and SEZ",
     status: "Pending",
     date: "2026-04-07",
   },
@@ -160,31 +160,31 @@ const TRANSACTIONS: TransactionItem[] = [
 const SHIPMENTS: ShipmentItem[] = [
   {
     shipmentId: "S-1009",
-    route: "Mumbai Port Hub -> Dubai Free Zone Hub",
+    route: "Mumbai Port Hub -> Dubai Sea Port",
     status: "In Transit",
     eta: "2026-04-18",
   },
   {
     shipmentId: "S-1008",
-    route: "Chennai Port Hub -> Singapore Gateway Hub",
+    route: "Chittagong Sea Port -> Singapore Sea Port",
     status: "Pending",
     eta: "2026-04-21",
   },
   {
     shipmentId: "S-1007",
-    route: "Delhi ICD Hub -> Mumbai Port Hub",
+    route: "Dhaka Air Cargo -> Mumbai Port Hub",
     status: "Delivered",
     eta: "2026-04-13",
   },
   {
     shipmentId: "S-1006",
-    route: "Bangalore Air Cargo Hub -> Chennai Port Hub",
+    route: "Dhaka Air Cargo -> Chittagong Sea Port",
     status: "Delayed",
     eta: "2026-04-15",
   },
   {
     shipmentId: "S-1005",
-    route: "Mundra Port Hub -> Rotterdam Port Hub",
+    route: "Karachi Port -> Singapore Sea Port",
     status: "Delivered",
     eta: "2026-04-12",
   },

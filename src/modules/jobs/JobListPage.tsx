@@ -24,13 +24,11 @@ import { jobService } from "@/services/jobService";
 
 const HUB_FILTER_OPTIONS = [
   "Mumbai Port Hub",
-  "Delhi ICD Hub",
-  "Chennai Port Hub",
-  "Mundra Port Hub",
-  "Bangalore Air Cargo Hub",
-  "Dubai Free Zone Hub",
-  "Singapore Gateway Hub",
-  "Rotterdam Port Hub",
+  "Dhaka Air Cargo",
+  "Chittagong Sea Port",
+  "Dubai Sea Port",
+  "Karachi Port",
+  "Singapore Sea Port",
 ];
 const STATUS_OPTIONS: Array<JobStatus | "All"> = [
   "All",

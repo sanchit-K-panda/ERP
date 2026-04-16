@@ -1,10 +1,10 @@
 import type { ActiveCompany } from "@/types/context";
 
 const MOCK_COMPANIES: ActiveCompany[] = [
-  { id: "c1", name: "Mahadev Logistics Pvt Ltd" },
-  { id: "c2", name: "Shree Ganesh Freight Lines" },
-  { id: "c3", name: "Bharat Coastal Movers" },
-  { id: "c4", name: "IndiTrans Supply Chain" },
+  { id: "c1", name: "Simon Cargo Service" },
+  { id: "c2", name: "Alpha Exim" },
+  { id: "c3", name: "Simon Logistics" },
+  { id: "c4", name: "XYX Limited" },
 ];
 
 function simulateLatency() {

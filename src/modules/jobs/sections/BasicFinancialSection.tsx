@@ -35,7 +35,7 @@ export function BasicFinancialSection({ register, errors }: BasicFinancialSectio
             id="currency"
             {...register("currency")}
           >
-            <option value="INR">INR</option>
+            <option value="BDT">BDT</option>
           </select>
         </div>
 

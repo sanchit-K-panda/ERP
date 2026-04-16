@@ -62,23 +62,73 @@ export type PermissionMatrix = Record<PermissionFeature, Record<PermissionRoleKe
 
 export type CompanySettingsStatus = "Active" | "Draft";
 
-export type CompanySettings = {
-  companyName: string;
-  code: string;
-  businessType: string;
-  logoName?: string;
-  status: CompanySettingsStatus;
+export type CompanyCodeMode = "Auto" | "Manual";
+
+export type CompanyBusinessType = "Pharma" | "Logistics" | "Agriculture" | "Textile";
+
+export type CompanyOperationHub = "Bangladesh" | "Pakistan" | "China" | "USA" | "UAE" | "India";
+
+export type CompanyCurrencyCode = "BDT" | "USD" | "EUR";
+
+export type CompanyImportConfig = {
+  enabled: boolean;
+  countries: string[];
+  primarySources: string[];
+  defaultCurrency: CompanyCurrencyCode;
 };
 
-export type HubType = "HQ" | "Origin" | "Destination" | "Transit";
+export type CompanyExportConfig = {
+  enabled: boolean;
+  countries: string[];
+  primaryDestinations: string[];
+  defaultCurrency: CompanyCurrencyCode;
+};
+
+export type CompanySettings = {
+  id: string;
+  companyName: string;
+  code: string;
+  codeMode: CompanyCodeMode;
+  businessTypes: CompanyBusinessType[];
+  logoName?: string;
+  status: CompanySettingsStatus;
+  operationStartDate: string;
+  mainOperationHub: CompanyOperationHub;
+  locationTags: string[];
+  importConfig: CompanyImportConfig;
+  exportConfig: CompanyExportConfig;
+};
+
+export type HubType = "HQ" | "Import Hub" | "Export Hub" | "Transit Hub";
+
+export type HubOperationSettings = {
+  enableImport: boolean;
+  enableExport: boolean;
+  enableTransit: boolean;
+  financialControlHub: boolean;
+  inventoryControlHub: boolean;
+  activeStatus: boolean;
+};
+
+export type HubTradeConnections = {
+  importCountries: string[];
+  importAdditional: string[];
+  importHubs: string[];
+  exportCountries: string[];
+  exportAdditional: string[];
+  exportHubs: string[];
+};
 
 export type HubRecord = {
   id: string;
   name: string;
+  hubCode: string;
   country: string;
   city: string;
   type: HubType;
   enabled: boolean;
+  operationSettings: HubOperationSettings;
+  tradeConnections: HubTradeConnections;
   updatedAt: string;
 };
 
@@ -98,10 +148,13 @@ export type HubQueryResult = {
 
 export type UpsertHubPayload = {
   name: string;
+  hubCode: string;
   country: string;
   city: string;
   type: HubType;
   enabled: boolean;
+  operationSettings: HubOperationSettings;
+  tradeConnections: HubTradeConnections;
 };
 
 export type NotificationChannels = {
@@ -125,4 +178,4 @@ export const SETTINGS_ROLE_OPTIONS: SettingsUserRole[] = [
   "STOCK_MANAGER",
 ];
 
-export const HUB_TYPE_OPTIONS: HubType[] = ["HQ", "Origin", "Destination", "Transit"];
+export const HUB_TYPE_OPTIONS: HubType[] = ["HQ", "Import Hub", "Export Hub", "Transit Hub"];

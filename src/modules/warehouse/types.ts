@@ -13,7 +13,7 @@ export type InventoryRecord = {
   reorderLevel: number;
   unit: string;
   unitCost: number;
-  currency: "INR";
+  currency: "BDT";
   lastUpdated: string;
   status: InventoryStatus;
 };

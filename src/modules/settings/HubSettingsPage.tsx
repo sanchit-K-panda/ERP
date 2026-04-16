@@ -19,7 +19,13 @@ import { Input } from "@/components/ui/Input";
 import { TableSkeleton } from "@/components/ui/TableSkeleton";
 import { HubFormModal } from "@/modules/settings/components/HubFormModal";
 import { settingsService } from "@/services/settingsService";
-import type { HubFilters, HubRecord, HubType, UpsertHubPayload } from "@/modules/settings/types";
+import {
+  HUB_TYPE_OPTIONS,
+  type HubFilters,
+  type HubRecord,
+  type HubType,
+  type UpsertHubPayload,
+} from "@/modules/settings/types";
 
 const DEFAULT_FILTERS: HubFilters = {
   search: "",
@@ -60,10 +66,16 @@ export function HubSettingsPage() {
     mutationFn: (hub: HubRecord) =>
       settingsService.updateHub(hub.id, {
         name: hub.name,
+        hubCode: hub.hubCode,
         country: hub.country,
         city: hub.city,
         type: hub.type,
         enabled: !hub.enabled,
+        operationSettings: {
+          ...hub.operationSettings,
+          activeStatus: !hub.enabled,
+        },
+        tradeConnections: hub.tradeConnections,
       }),
     onMutate: (hub) => {
       setStatusUpdatingHubId(hub.id);
@@ -166,7 +178,7 @@ export function HubSettingsPage() {
         <div>
           <h1 className="page-title">Hub Settings</h1>
           <p className="text-sm text-muted-foreground">
-            Manage operational hubs, location metadata, and hub status.
+            Create and edit hub setup with 4-step operational configuration.
           </p>
         </div>
         <Button
@@ -176,7 +188,7 @@ export function HubSettingsPage() {
           }}
         >
           <Plus className="h-4 w-4" />
-          Add Hub
+          Create New Hub
         </Button>
       </header>
 
@@ -212,10 +224,11 @@ export function HubSettingsPage() {
               value={filters.type}
             >
               <option value="All">All Types</option>
-              <option value="HQ">HQ</option>
-              <option value="Origin">Origin</option>
-              <option value="Destination">Destination</option>
-              <option value="Transit">Transit</option>
+              {HUB_TYPE_OPTIONS.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
             </select>
           </div>
         </div>

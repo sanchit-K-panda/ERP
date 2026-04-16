@@ -84,7 +84,8 @@ export function RevenueExpenseChart({
                 formatter={(value) =>
                   new Intl.NumberFormat("en-IN", {
                     style: "currency",
-                    currency: "INR",
+                    currency: "BDT",
+                    currencyDisplay: "narrowSymbol",
                     maximumFractionDigits: 0,
                   }).format(normalizeToNumber(value))
                 }

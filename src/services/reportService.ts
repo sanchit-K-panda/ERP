@@ -23,10 +23,11 @@ type ReportSeed = {
 
 const HUBS = [
   "Mumbai Port Hub",
-  "Delhi ICD Hub",
-  "Chennai Port Hub",
-  "Mundra Port Hub",
-  "Bangalore Air Cargo Hub",
+  "Dhaka Air Cargo",
+  "Chittagong Sea Port",
+  "Dubai Sea Port",
+  "Karachi Port",
+  "Singapore Sea Port",
 ];
 
 function shiftMonths(base: Date, delta: number) {

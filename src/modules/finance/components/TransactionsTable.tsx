@@ -33,6 +33,7 @@ function formatCurrency(value: number, currency: FinanceTransaction["currency"])
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency,
+    currencyDisplay: "narrowSymbol",
     maximumFractionDigits: 0,
   }).format(value);
 }

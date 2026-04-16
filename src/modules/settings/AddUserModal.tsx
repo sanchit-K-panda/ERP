@@ -213,7 +213,7 @@ export function AddUserModal({
                   <label className="text-sm font-medium text-foreground" htmlFor="user-email">
                     Email
                   </label>
-                  <Input id="user-email" placeholder="user@neo.com" {...register("email")} />
+                  <Input id="user-email" placeholder="user@simontrade.com" {...register("email")} />
                   {errors.email?.message ? (
                     <p className="text-xs text-danger">{errors.email.message}</p>
                   ) : null}

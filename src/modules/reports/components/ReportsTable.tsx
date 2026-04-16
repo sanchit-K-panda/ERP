@@ -30,7 +30,8 @@ function formatMetricValue(value: number, format: ReportValueFormat) {
   if (format === "currency") {
     return new Intl.NumberFormat("en-IN", {
       style: "currency",
-      currency: "INR",
+      currency: "BDT",
+      currencyDisplay: "narrowSymbol",
       maximumFractionDigits: 0,
     }).format(value);
   }

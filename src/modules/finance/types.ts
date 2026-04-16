@@ -1,6 +1,6 @@
 export type TransactionType = "Income" | "Expense";
 
-export type CurrencyCode = "INR";
+export type CurrencyCode = "BDT";
 
 export type InvoiceStatus = "Paid" | "Pending" | "Overdue";
 

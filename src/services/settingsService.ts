@@ -2,8 +2,10 @@ import type {
   CompanySettings,
   CreateUserPayload,
   HubFilters,
+  HubOperationSettings,
   HubQueryResult,
   HubRecord,
+  HubTradeConnections,
   NotificationSettings,
   SettingsUserRecord,
   UpsertHubPayload,
@@ -31,117 +33,238 @@ const INITIAL_USERS: SettingsUserRecord[] = [
   {
     id: "usr-1",
     fullName: "Sanchit Dutta",
-    email: "owner@neo.com",
+    email: "owner@simontrade.com",
     role: "BUSINESS_OWNER",
-    company: "Mahadev Logistics Pvt Ltd",
+    company: "Simon Cargo Service",
     status: "Active",
     createdAt: "2026-01-05T08:00:00.000Z",
   },
   {
     id: "usr-2",
     fullName: "Nabila Karim",
-    email: "manager@neo.com",
+    email: "manager@simontrade.com",
     role: "BUSINESS_MANAGER",
-    company: "Mahadev Logistics Pvt Ltd",
+    company: "Simon Cargo Service",
     status: "Active",
     createdAt: "2026-01-12T10:10:00.000Z",
   },
   {
     id: "usr-3",
     fullName: "Rafi Ahmed",
-    email: "sales@neo.com",
+    email: "sales@simontrade.com",
     role: "SALES_PERSON",
-    company: "Mahadev Logistics Pvt Ltd",
+    company: "Alpha Exim",
     status: "Active",
     createdAt: "2026-01-15T09:00:00.000Z",
   },
   {
     id: "usr-4",
     fullName: "Mithila Rahman",
-    email: "sales.manager@neo.com",
+    email: "sales.manager@simontrade.com",
     role: "SALES_MANAGER",
-    company: "Shree Ganesh Freight Lines",
+    company: "Alpha Exim",
     status: "Active",
     createdAt: "2026-02-01T06:20:00.000Z",
   },
   {
     id: "usr-5",
     fullName: "Ayon Das",
-    email: "projects@neo.com",
+    email: "projects@simontrade.com",
     role: "PROJECT_MANAGER",
-    company: "Bharat Coastal Movers",
+    company: "Simon Logistics",
     status: "Disabled",
     createdAt: "2026-02-18T12:30:00.000Z",
   },
   {
     id: "usr-6",
     fullName: "Sadia Noor",
-    email: "stock@neo.com",
+    email: "stock@simontrade.com",
     role: "STOCK_MANAGER",
-    company: "IndiTrans Supply Chain",
+    company: "XYX Limited",
     status: "Active",
     createdAt: "2026-03-05T10:30:00.000Z",
   },
 ];
 
+function createDefaultOperationSettings(
+  overrides?: Partial<HubOperationSettings>,
+): HubOperationSettings {
+  return {
+    enableImport: true,
+    enableExport: false,
+    enableTransit: false,
+    financialControlHub: true,
+    inventoryControlHub: true,
+    activeStatus: true,
+    ...overrides,
+  };
+}
+
+function createDefaultTradeConnections(
+  overrides?: Partial<HubTradeConnections>,
+): HubTradeConnections {
+  return {
+    importCountries: [],
+    importAdditional: [],
+    importHubs: [],
+    exportCountries: [],
+    exportAdditional: [],
+    exportHubs: [],
+    ...overrides,
+  };
+}
+
 const INITIAL_HUBS: HubRecord[] = [
   {
-    id: "hub-1",
+    id: "h1",
     name: "Mumbai Port Hub",
+    hubCode: "MUM-HQ",
     country: "India",
     city: "Mumbai",
     type: "HQ",
     enabled: true,
+    operationSettings: createDefaultOperationSettings({
+      enableExport: true,
+      enableTransit: true,
+    }),
+    tradeConnections: createDefaultTradeConnections({
+      importCountries: ["India", "Bangladesh"],
+      importHubs: ["Dhaka Air Cargo", "Chittagong Sea Port"],
+      exportCountries: ["UAE", "Singapore"],
+      exportHubs: ["Dubai Sea Port", "Singapore Sea Port"],
+    }),
     updatedAt: "2026-03-21T08:00:00.000Z",
   },
   {
-    id: "hub-2",
-    name: "Delhi ICD Hub",
-    country: "India",
-    city: "New Delhi",
-    type: "Origin",
+    id: "h2",
+    name: "Dhaka Air Cargo",
+    hubCode: "DAC-IMP",
+    country: "Bangladesh",
+    city: "Dhaka",
+    type: "Import Hub",
     enabled: true,
+    operationSettings: createDefaultOperationSettings({
+      enableExport: false,
+      enableTransit: false,
+    }),
+    tradeConnections: createDefaultTradeConnections({
+      importCountries: ["Bangladesh", "China"],
+      importHubs: ["Mumbai Port Hub"],
+      exportCountries: ["India"],
+      exportHubs: ["Mumbai Port Hub"],
+    }),
     updatedAt: "2026-03-21T08:00:00.000Z",
   },
   {
-    id: "hub-3",
-    name: "Chennai Port Hub",
-    country: "India",
-    city: "Chennai",
-    type: "Transit",
+    id: "h3",
+    name: "Chittagong Sea Port",
+    hubCode: "CGP-EXP",
+    country: "Bangladesh",
+    city: "Chittagong",
+    type: "Export Hub",
     enabled: true,
+    operationSettings: createDefaultOperationSettings({
+      enableExport: true,
+      enableTransit: true,
+    }),
+    tradeConnections: createDefaultTradeConnections({
+      importCountries: ["Bangladesh", "India"],
+      importHubs: ["Dhaka Air Cargo", "Mumbai Port Hub"],
+      exportCountries: ["Singapore", "UAE"],
+      exportHubs: ["Singapore Sea Port", "Dubai Sea Port"],
+    }),
     updatedAt: "2026-03-24T07:30:00.000Z",
   },
   {
-    id: "hub-4",
-    name: "Mundra Port Hub",
-    country: "India",
-    city: "Mundra",
-    type: "Destination",
-    enabled: false,
+    id: "h4",
+    name: "Dubai Sea Port",
+    hubCode: "DXB-TRN",
+    country: "UAE",
+    city: "Dubai",
+    type: "Transit Hub",
+    enabled: true,
+    operationSettings: createDefaultOperationSettings({
+      enableExport: true,
+      enableTransit: true,
+    }),
+    tradeConnections: createDefaultTradeConnections({
+      importCountries: ["India", "Bangladesh"],
+      importHubs: ["Mumbai Port Hub", "Chittagong Sea Port"],
+      exportCountries: ["Singapore"],
+      exportHubs: ["Singapore Sea Port"],
+    }),
     updatedAt: "2026-03-25T04:20:00.000Z",
   },
   {
-    id: "hub-5",
-    name: "Bangalore Air Cargo Hub",
-    country: "India",
-    city: "Bengaluru",
-    type: "Transit",
+    id: "h5",
+    name: "Karachi Port",
+    hubCode: "KHI-TRN",
+    country: "Pakistan",
+    city: "Karachi",
+    type: "Transit Hub",
     enabled: true,
+    operationSettings: createDefaultOperationSettings({
+      enableExport: true,
+      enableTransit: true,
+    }),
+    tradeConnections: createDefaultTradeConnections({
+      importCountries: ["Pakistan", "India"],
+      importHubs: ["Mumbai Port Hub"],
+      exportCountries: ["Singapore"],
+      exportHubs: ["Singapore Sea Port"],
+    }),
     updatedAt: "2026-03-28T11:40:00.000Z",
+  },
+  {
+    id: "h6",
+    name: "Singapore Sea Port",
+    hubCode: "SGP-EXP",
+    country: "Singapore",
+    city: "Singapore",
+    type: "Export Hub",
+    enabled: true,
+    operationSettings: createDefaultOperationSettings({
+      enableExport: true,
+      enableTransit: true,
+    }),
+    tradeConnections: createDefaultTradeConnections({
+      importCountries: ["UAE", "Pakistan", "Bangladesh"],
+      importHubs: ["Dubai Sea Port", "Karachi Port", "Chittagong Sea Port"],
+      exportCountries: ["USA"],
+      exportHubs: ["Mumbai Port Hub"],
+    }),
+    updatedAt: "2026-03-29T09:10:00.000Z",
   },
 ];
 
+const DEFAULT_COMPANY_SETTINGS: CompanySettings = {
+  id: "c2",
+  companyName: "Alpha Exim",
+  code: "ALX-001",
+  codeMode: "Auto",
+  businessTypes: ["Logistics"],
+  logoName: "simon-trade-logo.png",
+  status: "Active",
+  operationStartDate: "2026-04-16",
+  mainOperationHub: "Bangladesh",
+  locationTags: ["Location Tag"],
+  importConfig: {
+    enabled: true,
+    countries: ["Bangladesh", "India"],
+    primarySources: ["Bangladesh"],
+    defaultCurrency: "BDT",
+  },
+  exportConfig: {
+    enabled: true,
+    countries: ["UAE", "Singapore"],
+    primaryDestinations: ["UAE"],
+    defaultCurrency: "USD",
+  },
+};
+
 let usersDb: SettingsUserRecord[] = INITIAL_USERS.map((row) => structuredClone(row));
 let hubsDb: HubRecord[] = INITIAL_HUBS.map((row) => structuredClone(row));
-
-let companySettingsDb: CompanySettings = {
-  companyName: "Mahadev Logistics Pvt Ltd",
-  code: "MLP-001",
-  businessType: "Logistics & Trading",
-  logoName: "neo-logo.png",
-  status: "Active",
-};
+let companySettingsDb: CompanySettings = structuredClone(DEFAULT_COMPANY_SETTINGS);
 
 let notificationSettingsDb: NotificationSettings = {
   financeAlerts: {
@@ -171,6 +294,30 @@ function normalizeText(value: string) {
 
 function normalizeDate(value: string) {
   return new Date(value).getTime();
+}
+
+function sanitizeStringArray(values: string[]) {
+  return values
+    .map((value) => value.trim())
+    .filter((value) => value.length > 0)
+    .filter((value, index, array) => array.indexOf(value) === index);
+}
+
+function toAutoCompanyCode(name: string) {
+  const seed = name
+    .split(/\s+/)
+    .map((token) => token.replace(/[^A-Za-z0-9]/g, "").slice(0, 1).toUpperCase())
+    .join("")
+    .slice(0, 3)
+    .padEnd(3, "X");
+
+  return `${seed}-001`;
+}
+
+function toAutoHubCode(name: string) {
+  const seed = name.replace(/[^A-Za-z0-9]/g, "").slice(0, 3).toUpperCase().padEnd(3, "X");
+  const nextIndex = hubsDb.length + 1;
+  return `${seed}-${String(nextIndex).padStart(3, "0")}`;
 }
 
 function cloneUser(row: SettingsUserRecord) {
@@ -237,7 +384,12 @@ function nextUserId() {
 }
 
 function nextHubId() {
-  return `hub-${hubsDb.length + 1}`;
+  const maxId = hubsDb.reduce((max, row) => {
+    const value = Number(row.id.replace(/^h/, ""));
+    return Number.isFinite(value) ? Math.max(max, value) : max;
+  }, 0);
+
+  return `h${maxId + 1}`;
 }
 
 function assertUniqueEmail(email: string, ignoreUserId?: string) {
@@ -249,6 +401,28 @@ function assertUniqueEmail(email: string, ignoreUserId?: string) {
   if (duplicate) {
     throw new Error("A user with this email already exists.");
   }
+}
+
+function sanitizeOperationSettings(payload: HubOperationSettings): HubOperationSettings {
+  return {
+    enableImport: Boolean(payload.enableImport),
+    enableExport: Boolean(payload.enableExport),
+    enableTransit: Boolean(payload.enableTransit),
+    financialControlHub: Boolean(payload.financialControlHub),
+    inventoryControlHub: Boolean(payload.inventoryControlHub),
+    activeStatus: Boolean(payload.activeStatus),
+  };
+}
+
+function sanitizeTradeConnections(payload: HubTradeConnections): HubTradeConnections {
+  return {
+    importCountries: sanitizeStringArray(payload.importCountries),
+    importAdditional: sanitizeStringArray(payload.importAdditional),
+    importHubs: sanitizeStringArray(payload.importHubs),
+    exportCountries: sanitizeStringArray(payload.exportCountries),
+    exportAdditional: sanitizeStringArray(payload.exportAdditional),
+    exportHubs: sanitizeStringArray(payload.exportHubs),
+  };
 }
 
 export const settingsService = {
@@ -333,12 +507,30 @@ export const settingsService = {
   async updateCompanySettings(payload: CompanySettings): Promise<CompanySettings> {
     await simulateDelay(280);
 
+    const normalizedCompanyName = payload.companyName.trim();
+    const normalizedCode =
+      payload.codeMode === "Auto"
+        ? toAutoCompanyCode(normalizedCompanyName)
+        : payload.code.trim().toUpperCase();
+
     companySettingsDb = {
       ...payload,
-      companyName: payload.companyName.trim(),
-      code: payload.code.trim().toUpperCase(),
-      businessType: payload.businessType.trim(),
+      companyName: normalizedCompanyName,
+      code: normalizedCode,
+      businessTypes: payload.businessTypes,
       logoName: payload.logoName?.trim() || undefined,
+      operationStartDate: payload.operationStartDate,
+      locationTags: sanitizeStringArray(payload.locationTags),
+      importConfig: {
+        ...payload.importConfig,
+        countries: sanitizeStringArray(payload.importConfig.countries),
+        primarySources: sanitizeStringArray(payload.importConfig.primarySources),
+      },
+      exportConfig: {
+        ...payload.exportConfig,
+        countries: sanitizeStringArray(payload.exportConfig.countries),
+        primaryDestinations: sanitizeStringArray(payload.exportConfig.primaryDestinations),
+      },
     };
 
     return structuredClone(companySettingsDb);
@@ -363,13 +555,18 @@ export const settingsService = {
   async createHub(payload: UpsertHubPayload): Promise<HubRecord> {
     await simulateDelay(300);
 
+    const operationSettings = sanitizeOperationSettings(payload.operationSettings);
+
     const record: HubRecord = {
       id: nextHubId(),
       name: payload.name.trim(),
+      hubCode: payload.hubCode.trim().toUpperCase() || toAutoHubCode(payload.name),
       country: payload.country.trim(),
       city: payload.city.trim(),
       type: payload.type,
       enabled: payload.enabled,
+      operationSettings,
+      tradeConnections: sanitizeTradeConnections(payload.tradeConnections),
       updatedAt: new Date().toISOString(),
     };
 
@@ -383,13 +580,18 @@ export const settingsService = {
 
     const index = assertHubExists(hubId);
 
+    const operationSettings = sanitizeOperationSettings(payload.operationSettings);
+
     const updated: HubRecord = {
       ...hubsDb[index],
       name: payload.name.trim(),
+      hubCode: payload.hubCode.trim().toUpperCase(),
       country: payload.country.trim(),
       city: payload.city.trim(),
       type: payload.type,
       enabled: payload.enabled,
+      operationSettings,
+      tradeConnections: sanitizeTradeConnections(payload.tradeConnections),
       updatedAt: new Date().toISOString(),
     };
 
