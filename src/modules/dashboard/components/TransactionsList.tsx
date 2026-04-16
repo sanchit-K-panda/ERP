@@ -32,7 +32,9 @@ export function TransactionsList({
         accessorKey: "party",
         header: "Party",
         cell: ({ row }) => (
-          <span className="font-medium text-foreground">{row.original.party}</span>
+          <span className="block max-w-[280px] truncate font-medium text-foreground" title={row.original.party}>
+            {row.original.party}
+          </span>
         ),
       },
       {

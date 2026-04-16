@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Building2, LoaderCircle, Plus } from "lucide-react";
@@ -37,6 +37,7 @@ export function CompanySelector() {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [newCompanyName, setNewCompanyName] = useState("");
   const [createError, setCreateError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const setActiveCompany = useContextStore((state) => state.setActiveCompany);
 
   const companiesQuery = useQuery({
@@ -59,6 +60,16 @@ export function CompanySelector() {
       setCreateError(message);
     },
   });
+
+  const filteredCompanies = useMemo(() => {
+    const rows = companiesQuery.data ?? [];
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) {
+      return rows;
+    }
+
+    return rows.filter((company) => company.name.toLowerCase().includes(query));
+  }, [companiesQuery.data, searchQuery]);
 
   if (!ready) {
     return null;
@@ -121,14 +132,22 @@ export function CompanySelector() {
           </p>
         ) : null}
 
-        {companiesQuery.data?.length ? (
+        <div className="mb-3">
+          <Input
+            onChange={(event) => setSearchQuery(event.target.value)}
+            placeholder="Search companies (Bangladesh, Shipping, Marine, Akij)"
+            value={searchQuery}
+          />
+        </div>
+
+        {filteredCompanies.length ? (
           <motion.ul
             animate="visible"
             className="divide-y divide-border"
             initial="hidden"
             variants={listVariants}
           >
-            {companiesQuery.data.map((company) => {
+            {filteredCompanies.map((company) => {
               const isSelected = selectedId === company.id;
 
               return (
@@ -144,7 +163,7 @@ export function CompanySelector() {
                         <Building2 className="h-4 w-4" />
                       </span>
                       <div className="min-w-0">
-                        <p className="truncate text-sm font-medium text-foreground">
+                        <p className="truncate text-sm font-medium text-foreground" title={company.name}>
                           {company.name}
                         </p>
                         <p className="text-xs text-muted-foreground">ID: {company.id}</p>
@@ -180,6 +199,12 @@ export function CompanySelector() {
               );
             })}
           </motion.ul>
+        ) : null}
+
+        {!companiesQuery.isLoading && !companiesQuery.isError && filteredCompanies.length === 0 ? (
+          <p className="rounded-md border border-border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
+            No companies match your search.
+          </p>
         ) : null}
 
         <Modal

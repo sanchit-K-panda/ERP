@@ -95,6 +95,11 @@ export function UserManagementPage() {
       {
         accessorKey: "company",
         header: "Company",
+        cell: ({ row }) => (
+          <span className="block max-w-[260px] truncate" title={row.original.company}>
+            {row.original.company}
+          </span>
+        ),
       },
       {
         accessorKey: "status",

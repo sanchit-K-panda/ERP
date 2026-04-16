@@ -15,7 +15,7 @@ import type {
 const INITIAL_PARTIES: PartyRecord[] = [
   {
     id: "party-reliance",
-    name: "Reliance Retail Limited",
+    name: "Bangladesh Shipping Corporation (BSC)",
     type: "Client",
     email: "logistics@ril.com",
     phone: "+91-9876543210",
@@ -25,7 +25,7 @@ const INITIAL_PARTIES: PartyRecord[] = [
   },
   {
     id: "party-tata",
-    name: "Tata Steel Limited",
+    name: "Bangladesh Shipping Agencies (Pvt) Ltd",
     type: "Client",
     email: "supply@tatasteel.com",
     phone: "+91-9123456789",
@@ -35,7 +35,7 @@ const INITIAL_PARTIES: PartyRecord[] = [
   },
   {
     id: "party-adani",
-    name: "Adani Ports and SEZ",
+    name: "Sea King Marine Services Limited",
     type: "Vendor",
     email: "operations@adaniports.com",
     phone: "+91-9988776655",
@@ -45,7 +45,7 @@ const INITIAL_PARTIES: PartyRecord[] = [
   },
   {
     id: "party-mahindra",
-    name: "Mahindra Logistics Limited",
+    name: "Eastern Overseas Shipping Lines Ltd",
     type: "Agent",
     email: "controltower@mahindralogistics.com",
     phone: "+91-9090909090",
@@ -55,7 +55,7 @@ const INITIAL_PARTIES: PartyRecord[] = [
   },
   {
     id: "party-lnt",
-    name: "Larsen and Toubro Ltd",
+    name: "Akij Shipping Line Ltd",
     type: "Vendor",
     email: "infra.logistics@larsentoubro.com",
     phone: "+91-9012345678",

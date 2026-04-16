@@ -4,16 +4,18 @@ import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Bell, Building2, ChevronDown, Search } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { getRoleCompanyContext } from "@/constants/roleContext";
 import { useContextStore } from "@/store/contextStore";
 import { DropdownMenu } from "@/components/ui/DropdownMenu";
 import { Input } from "@/components/ui/Input";
 
 export function Header() {
   const router = useRouter();
-  const { user, logout } = useAuth();
+  const { user, role, logout } = useAuth();
   const activeCompany = useContextStore((state) => state.activeCompany);
   const activeHub = useContextStore((state) => state.activeHub);
   const clearContext = useContextStore((state) => state.clearContext);
+  const roleFallbackCompany = getRoleCompanyContext(role);
 
   const menuItems = useMemo(
     () => [
@@ -54,8 +56,11 @@ export function Header() {
             type="button"
           >
             <Building2 className="h-4 w-4 text-muted-foreground" />
-            <span className="max-w-[180px] truncate">
-              {activeCompany?.name ?? "No Company"}
+            <span
+              className="max-w-[220px] truncate"
+              title={activeCompany?.name ?? roleFallbackCompany.name}
+            >
+              {activeCompany?.name ?? roleFallbackCompany.name}
             </span>
           </button>
           <button

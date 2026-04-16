@@ -51,9 +51,9 @@ function toAutoCompanyCode(name: string) {
 
 function buildDefaultCompanySettings(): CompanySettings {
   return {
-    id: "c2",
-    companyName: "Alpha Exim",
-    code: "ALX-001",
+    id: "c1",
+    companyName: "Bangladesh Shipping Corporation (BSC)",
+    code: "BSC-001",
     codeMode: "Auto",
     businessTypes: ["Logistics"],
     logoName: "",

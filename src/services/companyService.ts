@@ -1,10 +1,13 @@
 import type { ActiveCompany } from "@/types/context";
 
 const MOCK_COMPANIES: ActiveCompany[] = [
-  { id: "c1", name: "Simon Cargo Service" },
-  { id: "c2", name: "Alpha Exim" },
-  { id: "c3", name: "Simon Logistics" },
-  { id: "c4", name: "XYX Limited" },
+  { id: "c1", name: "Bangladesh Shipping Corporation (BSC)" },
+  { id: "c2", name: "Bangladesh Shipping Agencies (Pvt) Ltd" },
+  { id: "c3", name: "Sea King Marine Services Limited" },
+  { id: "c4", name: "Kings Shipping Corporation (KSC)" },
+  { id: "c5", name: "Eastern Overseas Shipping Lines Ltd" },
+  { id: "c6", name: "V-OCEAN" },
+  { id: "c7", name: "Akij Shipping Line Ltd" },
 ];
 
 let companiesDb: ActiveCompany[] = MOCK_COMPANIES.map((company) => ({ ...company }));

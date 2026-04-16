@@ -33,6 +33,11 @@ export function RecentJobsTable({
       {
         accessorKey: "client",
         header: "Client",
+        cell: ({ row }) => (
+          <span className="block max-w-[280px] truncate" title={row.original.client}>
+            {row.original.client}
+          </span>
+        ),
       },
       {
         accessorKey: "status",

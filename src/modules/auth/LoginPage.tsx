@@ -9,8 +9,10 @@ import { z } from "zod";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { DEFAULT_ROLE_HUB_CONTEXT, ROLE_COMPANY_CONTEXT } from "@/constants/roleContext";
 import { useAuth } from "@/hooks/useAuth";
 import { useContextStore } from "@/store/contextStore";
+import type { ActiveCompany } from "@/types/context";
 
 const loginSchema = z.object({
   email: z.string().email("Enter a valid email address."),
@@ -18,6 +20,20 @@ const loginSchema = z.object({
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
+
+function getDefaultCompanyByEmail(email: string): ActiveCompany {
+  const normalized = email.trim().toLowerCase();
+
+  if (normalized === "manager@simontrade.com") {
+    return ROLE_COMPANY_CONTEXT.BUSINESS_MANAGER;
+  }
+
+  if (normalized === "sales@simontrade.com") {
+    return ROLE_COMPANY_CONTEXT.SALES_PERSON;
+  }
+
+  return ROLE_COMPANY_CONTEXT.BUSINESS_OWNER;
+}
 
 const QUICK_LOGIN = [
   { label: "Owner", email: "owner@simontrade.com", password: "123456" },
@@ -28,9 +44,8 @@ const QUICK_LOGIN = [
 export function LoginPage() {
   const router = useRouter();
   const { login, isAuthenticated } = useAuth();
-  const activeCompany = useContextStore((state) => state.activeCompany);
-  const activeHub = useContextStore((state) => state.activeHub);
-  const clearContext = useContextStore((state) => state.clearContext);
+  const setActiveCompany = useContextStore((state) => state.setActiveCompany);
+  const setActiveHub = useContextStore((state) => state.setActiveHub);
 
   const {
     register,
@@ -50,8 +65,9 @@ export function LoginPage() {
     mutationFn: async (values: LoginFormValues) => {
       await login(values.email, values.password);
     },
-    onSuccess: () => {
-      clearContext();
+    onSuccess: (_result, values) => {
+      setActiveCompany(getDefaultCompanyByEmail(values.email));
+      setActiveHub(DEFAULT_ROLE_HUB_CONTEXT);
       router.replace("/select-company");
     },
     onError: (error) => {
@@ -65,18 +81,8 @@ export function LoginPage() {
       return;
     }
 
-    if (!activeCompany) {
-      router.replace("/select-company");
-      return;
-    }
-
-    if (!activeHub) {
-      router.replace("/select-hub");
-      return;
-    }
-
-    router.replace("/dashboard");
-  }, [activeCompany, activeHub, isAuthenticated, router]);
+    router.replace("/select-company");
+  }, [isAuthenticated, router]);
 
   const onSubmit = (values: LoginFormValues) => {
     clearErrors();

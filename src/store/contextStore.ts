@@ -2,8 +2,8 @@ import { create } from "zustand";
 import type { ActiveCompany, ActiveHub } from "@/types/context";
 
 const DEFAULT_COMPANY: ActiveCompany = {
-  id: "c2",
-  name: "Alpha Exim",
+  id: "c1",
+  name: "Bangladesh Shipping Corporation (BSC)",
 };
 
 const DEFAULT_HUB: ActiveHub = {
