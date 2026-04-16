@@ -1,10 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, LoaderCircle, MapPin } from "lucide-react";
+import { ArrowRight, LoaderCircle, MapPin, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { Modal } from "@/components/ui/Modal";
 import { hubService } from "@/services/hubService";
 import { useRequireCompany } from "@/hooks/useRequireCompany";
 import { useContextStore } from "@/store/contextStore";
@@ -28,14 +31,33 @@ const rowVariants = {
 
 export function HubSelector() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { activeCompany, ready } = useRequireCompany();
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [newHubName, setNewHubName] = useState("");
+  const [createError, setCreateError] = useState<string | null>(null);
   const setActiveHub = useContextStore((state) => state.setActiveHub);
 
   const hubsQuery = useQuery({
     queryKey: ["hubs", activeCompany?.id],
     queryFn: () => hubService.getHubs(activeCompany?.id ?? ""),
     enabled: ready && Boolean(activeCompany),
+  });
+
+  const createHubMutation = useMutation({
+    mutationFn: hubService.createHub,
+    onSuccess: (hub) => {
+      queryClient.invalidateQueries({ queryKey: ["hubs", activeCompany?.id] });
+      setCreateError(null);
+      setNewHubName("");
+      setCreateModalOpen(false);
+      onSelectHub(hub);
+    },
+    onError: (error) => {
+      const message = error instanceof Error ? error.message : "Unable to create hub.";
+      setCreateError(message);
+    },
   });
 
   if (!ready) {
@@ -48,19 +70,44 @@ export function HubSelector() {
     router.push("/dashboard");
   };
 
+  const onCreateHub = () => {
+    setCreateError(null);
+    const normalizedName = newHubName.trim();
+    if (normalizedName.length < 2) {
+      setCreateError("Hub name must be at least 2 characters.");
+      return;
+    }
+
+    createHubMutation.mutate(normalizedName);
+  };
+
   return (
     <main className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
       <section className="w-full max-w-2xl rounded-lg border border-border bg-background p-6">
-        <div className="mb-5 space-y-1">
-          <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-            Step 2
-          </p>
-          <h1 className="text-2xl font-semibold tracking-tight">Select Hub</h1>
-          <p className="text-sm text-muted-foreground">
-            {activeCompany
-              ? `Choose an operating hub for ${activeCompany.name}.`
-              : "Choose an operating hub."}
-          </p>
+        <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
+          <div className="space-y-1">
+            <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+              Step 2
+            </p>
+            <h1 className="text-2xl font-semibold tracking-tight">Select Hub</h1>
+            <p className="text-sm text-muted-foreground">
+              {activeCompany
+                ? `Choose an operating hub for ${activeCompany.name}.`
+                : "Choose an operating hub."}
+            </p>
+          </div>
+
+          <Button
+            onClick={() => {
+              setCreateError(null);
+              setCreateModalOpen(true);
+            }}
+            size="sm"
+            variant="secondary"
+          >
+            <Plus className="h-4 w-4" />
+            Create New Hub
+          </Button>
         </div>
 
         {hubsQuery.isLoading ? (
@@ -136,6 +183,54 @@ export function HubSelector() {
             })}
           </motion.ul>
         ) : null}
+
+        <Modal
+          description="Add a hub and continue to your workspace."
+          onClose={() => {
+            setCreateModalOpen(false);
+            setCreateError(null);
+          }}
+          open={createModalOpen}
+          title="Create New Hub"
+        >
+          <form
+            className="space-y-3"
+            onSubmit={(event) => {
+              event.preventDefault();
+              onCreateHub();
+            }}
+          >
+            <div className="space-y-1">
+              <label className="text-sm font-medium text-foreground" htmlFor="new-hub-name">
+                Hub Name
+              </label>
+              <Input
+                id="new-hub-name"
+                onChange={(event) => setNewHubName(event.target.value)}
+                placeholder="Enter hub name"
+                value={newHubName}
+              />
+            </div>
+
+            {createError ? <p className="text-xs text-danger">{createError}</p> : null}
+
+            <div className="flex justify-end gap-2 border-t border-border pt-3">
+              <Button
+                onClick={() => {
+                  setCreateModalOpen(false);
+                  setCreateError(null);
+                }}
+                type="button"
+                variant="secondary"
+              >
+                Cancel
+              </Button>
+              <Button disabled={createHubMutation.isPending} type="submit">
+                {createHubMutation.isPending ? "Creating..." : "Create Hub"}
+              </Button>
+            </div>
+          </form>
+        </Modal>
       </section>
     </main>
   );

@@ -1,10 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Building2, LoaderCircle } from "lucide-react";
+import { ArrowRight, Building2, LoaderCircle, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { Modal } from "@/components/ui/Modal";
 import { companyService } from "@/services/companyService";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useContextStore } from "@/store/contextStore";
@@ -28,14 +31,33 @@ const rowVariants = {
 
 export function CompanySelector() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { ready } = useRequireAuth();
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [newCompanyName, setNewCompanyName] = useState("");
+  const [createError, setCreateError] = useState<string | null>(null);
   const setActiveCompany = useContextStore((state) => state.setActiveCompany);
 
   const companiesQuery = useQuery({
     queryKey: ["companies"],
     queryFn: companyService.getCompanies,
     enabled: ready,
+  });
+
+  const createCompanyMutation = useMutation({
+    mutationFn: companyService.createCompany,
+    onSuccess: (company) => {
+      queryClient.invalidateQueries({ queryKey: ["companies"] });
+      setCreateError(null);
+      setNewCompanyName("");
+      setCreateModalOpen(false);
+      onSelectCompany(company);
+    },
+    onError: (error) => {
+      const message = error instanceof Error ? error.message : "Unable to create company.";
+      setCreateError(message);
+    },
   });
 
   if (!ready) {
@@ -48,17 +70,42 @@ export function CompanySelector() {
     router.push("/select-hub");
   };
 
+  const onCreateCompany = () => {
+    setCreateError(null);
+    const normalizedName = newCompanyName.trim();
+    if (normalizedName.length < 2) {
+      setCreateError("Company name must be at least 2 characters.");
+      return;
+    }
+
+    createCompanyMutation.mutate(normalizedName);
+  };
+
   return (
     <main className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
       <section className="w-full max-w-2xl rounded-lg border border-border bg-background p-6">
-        <div className="mb-5 space-y-1">
-          <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-            Step 1
-          </p>
-          <h1 className="text-2xl font-semibold tracking-tight">Select Company</h1>
-          <p className="text-sm text-muted-foreground">
-            Choose the business entity you are operating in today.
-          </p>
+        <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
+          <div className="space-y-1">
+            <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+              Step 1
+            </p>
+            <h1 className="text-2xl font-semibold tracking-tight">Select Company</h1>
+            <p className="text-sm text-muted-foreground">
+              Choose the business entity you are operating in today.
+            </p>
+          </div>
+
+          <Button
+            onClick={() => {
+              setCreateError(null);
+              setCreateModalOpen(true);
+            }}
+            size="sm"
+            variant="secondary"
+          >
+            <Plus className="h-4 w-4" />
+            Create New Company
+          </Button>
         </div>
 
         {companiesQuery.isLoading ? (
@@ -134,6 +181,54 @@ export function CompanySelector() {
             })}
           </motion.ul>
         ) : null}
+
+        <Modal
+          description="Add a company before selecting your operating hub."
+          onClose={() => {
+            setCreateModalOpen(false);
+            setCreateError(null);
+          }}
+          open={createModalOpen}
+          title="Create New Company"
+        >
+          <form
+            className="space-y-3"
+            onSubmit={(event) => {
+              event.preventDefault();
+              onCreateCompany();
+            }}
+          >
+            <div className="space-y-1">
+              <label className="text-sm font-medium text-foreground" htmlFor="new-company-name">
+                Company Name
+              </label>
+              <Input
+                id="new-company-name"
+                onChange={(event) => setNewCompanyName(event.target.value)}
+                placeholder="Enter company name"
+                value={newCompanyName}
+              />
+            </div>
+
+            {createError ? <p className="text-xs text-danger">{createError}</p> : null}
+
+            <div className="flex justify-end gap-2 border-t border-border pt-3">
+              <Button
+                onClick={() => {
+                  setCreateModalOpen(false);
+                  setCreateError(null);
+                }}
+                type="button"
+                variant="secondary"
+              >
+                Cancel
+              </Button>
+              <Button disabled={createCompanyMutation.isPending} type="submit">
+                {createCompanyMutation.isPending ? "Creating..." : "Create Company"}
+              </Button>
+            </div>
+          </form>
+        </Modal>
       </section>
     </main>
   );
