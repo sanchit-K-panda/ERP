@@ -30,8 +30,7 @@ export function LoginPage() {
   const { login, isAuthenticated } = useAuth();
   const activeCompany = useContextStore((state) => state.activeCompany);
   const activeHub = useContextStore((state) => state.activeHub);
-  const setActiveCompany = useContextStore((state) => state.setActiveCompany);
-  const setActiveHub = useContextStore((state) => state.setActiveHub);
+  const clearContext = useContextStore((state) => state.clearContext);
 
   const {
     register,
@@ -52,9 +51,8 @@ export function LoginPage() {
       await login(values.email, values.password);
     },
     onSuccess: () => {
-      setActiveCompany({ id: "c2", name: "Alpha Exim" });
-      setActiveHub({ id: "h3", name: "Chittagong Sea Port" });
-      router.replace("/dashboard");
+      clearContext();
+      router.replace("/select-company");
     },
     onError: (error) => {
       const message = error instanceof Error ? error.message : "Unable to sign in.";
