@@ -41,10 +41,7 @@ export function Header() {
   );
 
   return (
-    <header
-      className="fixed right-0 top-0 z-30 h-[60px] border-b border-border bg-background/95 backdrop-blur transition-[left] duration-150 ease-out"
-      style={{ left: "var(--shell-offset, 240px)" }}
-    >
+    <header className="h-16 shrink-0 border-b border-border bg-background">
       <div className="flex h-full items-center justify-between gap-3 px-4 md:px-6">
         <div className="flex min-w-0 items-center gap-2">
           <button

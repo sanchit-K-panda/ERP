@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 :root {
-  --shell-offset: 240px;
   --background: 248 250 252;
   --foreground: 15 23 42;
   --muted: 241 245 249;

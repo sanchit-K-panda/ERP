@@ -11,23 +11,20 @@ export function AppShell({ children }: { children: ReactNode }) {
   const isJobsListRoute = pathname === "/jobs";
 
   return (
-    <div className="h-screen overflow-hidden bg-background text-foreground">
+    <div className="flex h-screen overflow-hidden bg-background text-foreground">
       <Sidebar />
 
-      <div
-        className="h-screen transition-[padding-left] duration-150 ease-out"
-        style={{ paddingLeft: "var(--shell-offset, 240px)" }}
-      >
+      <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
         <Header />
-        <main
+        <div
           className={cn(
-            "h-full pt-[60px]",
+            "h-[calc(100vh-64px)]",
             isJobsListRoute ? "overflow-hidden" : "overflow-y-auto",
           )}
         >
-          <div className="container h-full min-h-0 py-6">{children}</div>
-        </main>
-      </div>
+          <div className="px-6 py-6 lg:px-8">{children}</div>
+        </div>
+      </main>
     </div>
   );
 }

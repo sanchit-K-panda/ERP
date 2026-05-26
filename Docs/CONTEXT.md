@@ -137,7 +137,56 @@ The system is purpose-built for this domain. Generic tools (Odoo, Zoho, Salesfor
 
 ---
 
-## 9. What "Done" Looks Like (v1)
+## 9. This Repository (Frontend) — Scope & Details
+
+This workspace contains the **frontend application** for NEO CRM. The backend (API) is maintained in a separate repository (NestJS is the recommended backend stack in the plans), so expect this repo to focus on UI, client-side logic, and integration with the API.
+
+Tech & runtime:
+- **Framework**: Next.js (app router, `app/` directory) — see `next.config.ts` and `app/`.
+- **Language**: TypeScript
+- **UI**: TailwindCSS + custom component library in `src/ui` and `src/components`
+- **State**: `zustand` for lightweight global state (`src/store`)
+- **Data fetching**: `@tanstack/react-query` + `axios` (`src/services`)
+- **Forms & validation**: `react-hook-form` and `zod`
+- **Charts**: `recharts` and small chart components under `src/modules/dashboard/charts`
+- **Other**: `framer-motion`, `lucide-react`, `react-dropzone`
+
+How to run locally:
+
+Install deps and start dev server:
+
+```bash
+pnpm install
+pnpm dev
+```
+
+Useful scripts (see `package.json`): `dev`, `build`, `start`, `lint`, `typecheck`, `format`.
+
+Important environment variables:
+- `NEXT_PUBLIC_API_BASE_URL` — base URL for the backend API used by `src/services/api.ts`.
+
+API integration notes:
+- `src/services/api.ts` creates an Axios instance that reads `NEXT_PUBLIC_API_BASE_URL` and automatically adds `X-Company-ID` and `X-Hub-ID` headers from the active context (`src/store/contextStore.ts`).
+- Keep this behavior in mind when testing APIs locally (the backend must accept or ignore these headers).
+
+Frontend conventions & where to look:
+- `app/` — Next.js route layers and page layout.
+- `src/modules/*` — Feature pages and domain logic (jobs, parties, documents, finance, etc.).
+- `src/services/*` — Thin API wrapper functions used across modules.
+- `src/store/*` — Global client state (Zustand stores). Note: `contextStore` supports opt-in dev defaults via `NEXT_PUBLIC_USE_DEV_CONTEXT=true`.
+- `src/components/layout` — App shell, header, sidebar, providers.
+- `src/ui/*` — Reusable UI primitives (Button, Input, Modal, etc.).
+- `hooks/*` — Auth and route guard hooks used by pages.
+
+Notes & expectations:
+- This repo targets desktop-first v1; mobile and customer-portal are planned for v2.
+- Keep sensitive secrets out of the frontend — only `NEXT_PUBLIC_` prefixed vars are safe for client-side use.
+- Use `src/services` and `src/store` when adding cross-cutting logic; avoid placing API logic directly in UI components.
+- Sidebar collapse uses a CSS width transition from 240px to 72px; labels hide via opacity/hidden while icons stay centered.
+- Auth state is persisted in local storage to keep users signed in across reloads.
+
+
+## 10. What "Done" Looks Like (v1)
 
 A v1 release is complete when:
 - [ ] Business Owner can create a company + hub and onboard the system in < 10 minutes
